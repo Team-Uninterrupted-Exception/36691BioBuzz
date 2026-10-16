@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Commands.SixWheelCMD;
@@ -16,24 +17,15 @@ public class Drivetrain {
         // We are defining the motors here:
         // Left side of the robot
         frontLeft = hMap.get(DcMotorEx.class, "frontLeft");
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft = hMap.get(DcMotorEx.class, "backLeft");
-        leftSide = new MotorGroup(
-                frontLeft,
-                backLeft,
-                DcMotorEx.Direction.REVERSE,
-                DcMotorEx.Direction.REVERSE
-        );
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Right side of the robot
         frontRight = hMap.get(DcMotorEx.class, "frontRight");
         backRight = hMap.get(DcMotorEx.class, "backRight");
-        rightSide = new MotorGroup(
-                frontRight,
-                backRight,
-                DcMotorEx.Direction.FORWARD,
-                DcMotorEx.Direction.REVERSE
-        );
-    }
+
+   }
 
     public void arcadeDrive(double forward, double turn) {
         cmd.setMotors(forward - turn, forward + turn);
@@ -59,5 +51,12 @@ public class Drivetrain {
         backRight.setPower((driveRotation + strafeRotation - turn) / denominator);
         // Don't use motor groups when dealing with mecanum. It literally defeats the purpose of
         // mecanum (strafing)
+    }
+
+    public void mecanumDriveSimple(double forward, double strafe, double turn) {
+        frontLeft.setPower(forward + strafe + turn);
+        frontRight.setPower(forward - strafe - turn);
+        backLeft.setPower(forward - strafe + turn);
+        backRight.setPower(forward + strafe - turn);
     }
 }

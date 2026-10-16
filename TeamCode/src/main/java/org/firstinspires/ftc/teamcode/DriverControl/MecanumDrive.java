@@ -8,12 +8,12 @@ import org.firstinspires.ftc.teamcode.Subsystems.Intake;
 @TeleOp
 public class MecanumDrive extends OpMode {
     Drivetrain drivetrain;
-    Intake intake;
+//    Intake intake;
 
     @Override
     public void init() { // called once when INIT is pressed
         drivetrain = new Drivetrain(hardwareMap);
-        intake = new Intake(hardwareMap);
+//        intake = new Intake(hardwareMap);
 
         telemetry.addData("Status", "Initialized"); // Displays this on Driver Station
         telemetry.update(); // updates the telemetry on the screen
@@ -24,15 +24,18 @@ public class MecanumDrive extends OpMode {
     public void loop() { // loops after ▶ is pressed
         telemetry.addData("Status", "Started");
 
-        double leftJoyX = gamepad1.left_stick_x;
-        double leftJoyY = -gamepad1.left_stick_y;
-        double rightJoyX = -gamepad1.right_stick_x; // turn
+        double leftJoyX = gamepad1.left_stick_x; // strafe
+        double leftJoyY = -gamepad1.left_stick_y; // forward
+        double rightJoyX = gamepad1.right_stick_x; // turn
+        // NOTE: Xbox controllers are not compatible with FTCRobotController. The right stick is
+        // nonfunctional. Not only does the right stick not work, pressing the left trigger causes
+        // the right stick to read as the -input and does not return back to 0.
 
-        double rightTrigger = gamepad1.right_trigger * 0.8;
+        telemetry.addData("leftJoyX",leftJoyX);
+        telemetry.addData("leftJoyY",leftJoyY);
+        telemetry.addData("rightJoyX",rightJoyX);
 
-        drivetrain.mecanumDrive(leftJoyX, leftJoyY, rightJoyX);
-
-        intake.setPower(rightTrigger);
+        drivetrain.mecanumDriveSimple(leftJoyY, leftJoyX, rightJoyX);
 
         telemetry.update();
     }
